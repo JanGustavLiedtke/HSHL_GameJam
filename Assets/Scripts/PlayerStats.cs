@@ -9,12 +9,12 @@ public class PlayerStats : MonoBehaviour
 
     private void Start()
     {
-        coins = 0;
+        //coins = 0;
     }
 
     private void Update()
     {
-        Debug.Log("coins: " + coins);
+        //Debug.Log("coins: " + coins);
     }
 
 }
