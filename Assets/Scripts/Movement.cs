@@ -38,8 +38,11 @@ public class Movement : MonoBehaviour
         
         _move = Input.GetAxis("Horizontal");
 
-        if (Input.GetButtonDown("Jump") && canJump && isGrounded)
+        if (Input.GetButtonDown("Jump") && canJump && isGrounded && !Input.GetAxisRaw("Vertical").Equals(-1f))
             Jump();
+
+        if (Input.GetAxisRaw("Vertical").Equals(-1f))
+            Fall();
     }
 
     private void FixedUpdate()
@@ -53,6 +56,16 @@ public class Movement : MonoBehaviour
         _rb.AddForce(Vector2.up * jumpForce);
         isGrounded = false;
         StartCoroutine(JumpCooldown());
+    }
+
+    private void Fall()
+    {
+        var hits = new List<RaycastHit2D>();
+        _groundTrigger.Cast(Vector2.down, new ContactFilter2D(), hits, groundCheckDist * 2);
+        foreach (var hit in hits)
+        {
+            StartCoroutine(DisableColliderTemp(hit.collider, .4f));
+        }
     }
 
     private void Move()
@@ -80,5 +93,12 @@ public class Movement : MonoBehaviour
 
         _rb.mass = startMass;
         _isMassIncreaseRunning = false;
+    }
+
+    private IEnumerator DisableColliderTemp(Collider2D col, float duration_s)
+    {
+        col.enabled = false;
+        yield return new WaitForSeconds(duration_s);
+        col.enabled = true;
     }
 }
