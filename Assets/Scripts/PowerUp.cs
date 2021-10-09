@@ -4,17 +4,22 @@ using UnityEngine;
 
 public class PowerUp : MonoBehaviour
 {
-    private void OnTriggerEnter(Collider other)
+    [SerializeField] GameObject pickupEffect;
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        Debug.Log("Trigger Detected");
         if (other.CompareTag("Player"))
         {
-            Pickup();
+            Pickup(other);
         }
     }
 
-    void Pickup()
+    void Pickup(Collider2D player)
     {
+        //Instantiate(pickupEffect, transform.position, transform.rotation);
+
         Debug.Log("picked up!");
+        player.GetComponent<SpriteRenderer>().color = Color.green;
+
+        Destroy(gameObject);
     }
 }
